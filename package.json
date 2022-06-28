@@ -1,0 +1,28 @@
+{
+  "name": "strapi-plugin-pfapi-data",
+  "version": "1.0.0",
+  "description": "World Cities Data Set for Pfapi Demo.",
+  "strapi": {
+    "name": "strapi-plugin-pfapi-data",
+    "description": "World Cities Data Set for Pfapi Demo.",
+    "kind": "plugin",
+    "displayName": "World Cities Data"
+  },
+  "dependencies": {
+    "fs-extra": "^10.1.0",
+    "unzipper": "^0.10.11"
+  },
+  "author": {
+    "name": "A Strapi developer"
+  },
+  "maintainers": [
+    {
+      "name": "A Strapi developer"
+    }
+  ],
+  "engines": {
+    "node": ">=14.19.1 <=16.x.x",
+    "npm": ">=6.0.0"
+  },
+  "license": "MIT"
+}
