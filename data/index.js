@@ -60,27 +60,20 @@ module.exports = async (strapi) => {
         
         console.log('world_cities total', world_cities.length);
 
-        let i = 0;
         const batch = 500;
         const entries = [];
-
-        while (world_cities.length > 0) {
-
-            const entry = world_cities.pop();
-            entry.published_at = new Date();
-
-            entries.push(entry);
-
+        for (let i = 0; i < world_cities.length; i++) {
+            entries.push(world_cities[i]);
             if (entries.length === batch) {
                 await strapi.query(uid).createMany({data: entries});
                 entries.length = 0;
             }
-
-            if (i++ % 1000 === 0) process.stdout.write('.');
+            if (i % 1000 === 0) process.stdout.write('.');
         }
 
         if (entries.length > 0) {
             await strapi.query(uid).createMany({data: entries});
+            entries.length = 0;
             process.stdout.write('.');
         }
 
