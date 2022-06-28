@@ -8,7 +8,6 @@ const axios = require('axios');
 
 module.exports = async (strapi) => {
 
-    console.log('***');
     const tmpdir = node_path.join(os.tmpdir(), 'pfapi-data');
 
     const project_root = get_project_root();
