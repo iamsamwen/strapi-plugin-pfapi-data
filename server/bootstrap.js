@@ -2,6 +2,6 @@
 
 const load_data = require('../data');
 
-module.exports = ({ strapi }) => {
-    load_data(strapi);
+module.exports = async ({ strapi }) => {
+    await load_data(strapi);
 };

@@ -4,10 +4,13 @@ const os = require('os');
 const fs = require('fs-extra');
 const unzipper = require('unzipper');
 const node_path = require('path');
+const axios = require('axios');
 
 module.exports = async (strapi) => {
 
+    console.log('***');
     const tmpdir = node_path.join(os.tmpdir(), 'pfapi-data');
+
     const project_root = get_project_root();
     const api_path = node_path.join(project_root, 'src', 'api');
     const world_city_api_path = node_path.join(api_path, 'world-city');
@@ -95,13 +98,48 @@ module.exports = async (strapi) => {
 
     if (await strapi.query(handle_uid).count() > 0) return;
 
-    const handle_filepath = node_path.join(__dirname, 'handles.json');
+    const handle_filepath = node_path.join(tmpdir, 'handles.json');
     
+    if (!fs.existsSync(handle_filepath)) {
+
+        fs.mkdirSync(tmpdir, {recursive: true});
+
+        if (!await download('https://s3.amazonaws.com/assets.jbtns.com/pfapi/handles.json', handle_filepath)) {
+            console.log('failed to download handles.json');
+            return;
+        }
+    }
+
     const handles = require(handle_filepath);
 
     await strapi.query(handle_uid).createMany({data: handles});
 
     console.log(`uploaded ${handles.length} handles`);
+
+    if (fs.existsSync(tmpdir)) {
+        await fs.rm(tmpdir, {recursive: true});
+    }
+}
+
+async function download(url, local_filepath) {
+    try {
+        const response = await axios({method: 'GET', url, responseType: 'stream'});
+
+        const pipe = response.data.pipe(fs.createWriteStream(local_filepath));
+
+        return await new Promise(resolve => {
+            pipe.on('finish', () => {
+                resolve(true);
+            });
+            pipe.on('error', err => {
+                console.error(err);
+                resolve(false);
+            });
+        });
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
 }
 
 function get_project_root() {
