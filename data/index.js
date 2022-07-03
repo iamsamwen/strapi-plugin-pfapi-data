@@ -11,7 +11,7 @@ module.exports = async (strapi) => {
 
     const tmpdir = node_path.join(os.tmpdir(), 'pfapi-data');
 
-    const project_root = get_project_root();
+    const project_root = strapi.dirs.root;
     const api_path = node_path.join(project_root, 'src', 'api');
     const world_city_api_path = node_path.join(api_path, 'world-city');
 
@@ -29,7 +29,7 @@ module.exports = async (strapi) => {
     
     const uid = 'api::world-city.world-city';
 
-    if (!has_uid(strapi, uid)) {
+    if (!strapi.contentTypes[uid]) {
 
         if (fs.existsSync(tmpdir)) {
             await fs.rm(tmpdir, {recursive: true});
@@ -87,7 +87,7 @@ module.exports = async (strapi) => {
 
     const handle_uid = 'plugin::pfapi.pfapi-handle';
 
-    if (!has_uid(strapi, handle_uid)) return;
+    if (!strapi.contentTypes[handle_uid]) return;
 
     if (await strapi.db.query(handle_uid).count() > 0) return;
 
@@ -107,6 +107,7 @@ module.exports = async (strapi) => {
 
     for (const handle of handles) {
         const data = get_config_entity(handle);
+        data.publishedAt = new Date();
         await strapi.entityService.create(handle_uid, {data});
     }
 
@@ -136,27 +137,6 @@ async function download(url, local_filepath) {
       console.error(err);
       return null;
     }
-}
-
-function get_project_root() {
-
-    const strapi_bin_path = '/node_modules/@strapi/strapi/bin';
-    const main_path = node_path.dirname(require.main.filename);
-
-    if (!main_path.endsWith(strapi_bin_path)) {
-        throw new Error('failed to get project root');
-    }
-
-    return main_path.slice(0, main_path.length - strapi_bin_path.length);
-}
-
-function has_uid(strapi, uid) {
-    for (const [key, ] of Object.entries(strapi.contentTypes)) {
-        if (key === uid) {
-            return true;
-        }
-    }
-    return false;
 }
 
 function unzip(src_filepath, des_path) {
