@@ -5,6 +5,7 @@ const fs = require('fs-extra');
 const unzipper = require('unzipper');
 const node_path = require('path');
 const axios = require('axios');
+const get_config_entity = require('./get-config-entity');
 
 module.exports = async (strapi) => {
 
@@ -37,7 +38,7 @@ module.exports = async (strapi) => {
         return;
     }
 
-    if (await strapi.query(uid).count() == 0) {
+    if (await strapi.db.query(uid).count() == 0) {
 
         const des_filepath = node_path.join(tmpdir, 'world-cities.json');
         if (fs.existsSync(des_filepath)) {
@@ -65,14 +66,14 @@ module.exports = async (strapi) => {
         for (let i = 0; i < world_cities.length; i++) {
             entries.push(world_cities[i]);
             if (entries.length === batch) {
-                await strapi.query(uid).createMany({data: entries});
+                await strapi.db.query(uid).createMany({data: entries});
                 entries.length = 0;
             }
             if (i % 1000 === 0) process.stdout.write('.');
         }
 
         if (entries.length > 0) {
-            await strapi.query(uid).createMany({data: entries});
+            await strapi.db.query(uid).createMany({data: entries});
             entries.length = 0;
             process.stdout.write('.');
         }
@@ -88,7 +89,7 @@ module.exports = async (strapi) => {
 
     if (!has_uid(strapi, handle_uid)) return;
 
-    if (await strapi.query(handle_uid).count() > 0) return;
+    if (await strapi.db.query(handle_uid).count() > 0) return;
 
     const handle_filepath = node_path.join(tmpdir, 'handles.json');
     
@@ -104,7 +105,10 @@ module.exports = async (strapi) => {
 
     const handles = require(handle_filepath);
 
-    await strapi.query(handle_uid).createMany({data: handles});
+    for (const handle of handles) {
+        const data = get_config_entity(handle);
+        await strapi.entityService.create(handle_uid, {data});
+    }
 
     console.log(`uploaded ${handles.length} handles`);
 
