@@ -17,14 +17,11 @@ module.exports = async (strapi) => {
 
     if (!fs.existsSync(world_city_api_path)) {
 
-        console.log('api not exists', world_city_api_path);
+        strapi.log.info(`create world-city api: ${world_city_api_path}`);
         const src_filepath = node_path.join(__dirname, 'world-city.zip');
         await unzip(src_filepath, tmpdir);
         await fs.move(node_path.join(tmpdir, 'world-city'), node_path.join(api_path, 'world-city'));
 
-    } else {
-        
-        console.log('api exists', world_city_api_path);
     }
     
     const uid = 'api::world-city.world-city';
@@ -40,6 +37,8 @@ module.exports = async (strapi) => {
 
     if (await strapi.db.query(uid).count() == 0) {
 
+        strapi.log.info('populating world_cities with data');
+
         const des_filepath = node_path.join(tmpdir, 'world-cities.json');
         if (fs.existsSync(des_filepath)) {
             await fs.unlinkSync(des_filepath);
@@ -53,13 +52,13 @@ module.exports = async (strapi) => {
         await unzip(src_filepath, tmpdir);
 
         if (!fs.existsSync(des_filepath)) {
-            console.log(`unzipped file ${des_filepath} not found`);
+            strapi.log.error(`unzipped file ${des_filepath} not found`);
             return;
         }
 
         const world_cities = require(des_filepath);
         
-        console.log('world_cities total', world_cities.length);
+        strapi.log.info(`world_cities total: ${world_cities.length}`);
 
         const batch = 500;
         const entries = [];
@@ -78,7 +77,7 @@ module.exports = async (strapi) => {
             process.stdout.write('.');
         }
 
-        console.log('\nworld cities upload done!');
+        strapi.log.info('world cities data population done!');
 
         if (fs.existsSync(tmpdir)) {
             await fs.rm(tmpdir, {recursive: true});
@@ -98,7 +97,7 @@ module.exports = async (strapi) => {
         fs.mkdirSync(tmpdir, {recursive: true});
 
         if (!await download('https://s3.amazonaws.com/assets.jbtns.com/pfapi/handles.json', handle_filepath)) {
-            console.log('failed to download handles.json');
+            strapi.log.error('failed to download handles.json');
             return;
         }
     }
@@ -111,7 +110,7 @@ module.exports = async (strapi) => {
         await strapi.entityService.create(handle_uid, {data});
     }
 
-    console.log(`uploaded ${handles.length} handles`);
+    strapi.log.info(`uploaded ${handles.length} handles`);
 
     if (fs.existsSync(tmpdir)) {
         await fs.rm(tmpdir, {recursive: true});
@@ -129,12 +128,12 @@ async function download(url, local_filepath) {
                 resolve(true);
             });
             pipe.on('error', err => {
-                console.error(err);
+                strapi.log.error(err);
                 resolve(false);
             });
         });
     } catch (err) {
-      console.error(err);
+    strapi.log.error(err);
       return null;
     }
 }

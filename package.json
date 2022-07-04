@@ -1,6 +1,6 @@
 {
   "name": "strapi-plugin-pfapi-data",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "World Cities Data Set for Pfapi Demo.",
   "strapi": {
     "name": "strapi-plugin-pfapi-data",
@@ -14,11 +14,11 @@
     "unzipper": "^0.10.11"
   },
   "author": {
-    "name": "A Strapi developer"
+    "name": "Sam Wen"
   },
   "maintainers": [
     {
-      "name": "A Strapi developer"
+      "name": "Sam Wen"
     }
   ],
   "engines": {
