@@ -10,4 +10,4 @@ after installing strapi-plugin-pfapi:
 yarn add strapi-plugin-pfapi-data
 ```
 
-***disclaim*** data, text, and images used in this plugin originated from the public internet. Copyrights belong to its creator. Most of them are explicitly stated it is free to use. If you find any of them is in doubt or do not conform with it, please let me know, I will remove it as soon as I know.
+***disclaim***: data, text, and images used in this plugin originated from the public internet. Copyrights belong to its creator. Most of them are explicitly stated it is free to use. If you find any of them is in doubt or do not conform with it, please let me know, I will remove it as soon as I know.
