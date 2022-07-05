@@ -1,8 +1,8 @@
 'use strict';
 
-const os = require('os');
 const fs = require('fs-extra');
 const node_path = require('path');
+const unzip = require('./unzip');
 
 (async () => {
 
@@ -44,4 +44,15 @@ const node_path = require('path');
         console.log('installed world-city api');
     }
 
+    const uploads_pfapi_path = node_path.join(root, 'public', 'uploads', 'pfapi');
+
+    if (!fs.existsSync(uploads_pfapi_path)) {
+        const uploads_path = node_path.join(root, 'public', 'uploads');
+        if (!fs.existsSync(uploads_path)) {
+            fs.mkdirSync(uploads_path, {recursive: true});
+        }
+        const src_filepath = node_path.join(__dirname, 'pfapi.zip');
+        await unzip(src_filepath, uploads_path);
+        console.log('installed pfapi files');
+    }
 })();

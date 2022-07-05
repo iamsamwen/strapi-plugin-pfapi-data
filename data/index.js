@@ -2,10 +2,8 @@
 
 const os = require('os');
 const fs = require('fs-extra');
-const unzipper = require('unzipper');
 const node_path = require('path');
-const axios = require('axios');
-const get_config_entity = require('./get-config-entity');
+const unzip = require('./unzip');
 
 module.exports = async (strapi) => {
 
@@ -54,6 +52,8 @@ module.exports = async (strapi) => {
             if (i % 1000 === 0) process.stdout.write('.');
         }
 
+        process.stdout.write('\n');
+
         if (entries.length > 0) {
             await strapi.db.query(uid).createMany({data: entries});
             entries.length = 0;
@@ -68,68 +68,35 @@ module.exports = async (strapi) => {
     }
 
     const handle_uid = 'plugin::pfapi.pfapi-handle';
+    const files_uid = 'plugin::upload.file';
 
     if (!strapi.contentTypes[handle_uid]) return;
-
     if (await strapi.db.query(handle_uid).count() > 0) return;
+    if (await strapi.db.query(files_uid).count() > 0) return;
 
-    const handle_filepath = node_path.join(tmpdir, 'handles.json');
-    
-    if (!fs.existsSync(handle_filepath)) {
+    const files_path = node_path.join(__dirname, 'files.json');
 
-        fs.mkdirSync(tmpdir, {recursive: true});
+    const files = require(files_path);
 
-        if (!await download('https://s3.amazonaws.com/assets.jbtns.com/pfapi/handles.json', handle_filepath)) {
-            strapi.log.error('failed to download handles.json');
-            return;
-        }
+    for (const data of files) {
+        await strapi.entityService.create(files_uid, {data});
     }
 
+    strapi.log.info(`added ${files.length} files`);
+
+    const handle_filepath = node_path.join(__dirname, 'handles.json');
+    
     const handles = require(handle_filepath);
 
-    for (const handle of handles) {
-        const data = get_config_entity(handle);
+    for (const data of handles) {
         data.publishedAt = new Date();
         await strapi.entityService.create(handle_uid, {data});
     }
 
-    strapi.log.info(`uploaded ${handles.length} handles`);
+    strapi.log.info(`added ${handles.length} handles`);
 
     if (fs.existsSync(tmpdir)) {
         await fs.rm(tmpdir, {recursive: true});
     }
 }
 
-async function download(url, local_filepath) {
-    try {
-        const response = await axios({method: 'GET', url, responseType: 'stream'});
-
-        const pipe = response.data.pipe(fs.createWriteStream(local_filepath));
-
-        return await new Promise(resolve => {
-            pipe.on('finish', () => {
-                resolve(true);
-            });
-            pipe.on('error', err => {
-                strapi.log.error(err);
-                resolve(false);
-            });
-        });
-    } catch (err) {
-    strapi.log.error(err);
-      return null;
-    }
-}
-
-function unzip(src_filepath, des_path) {
-    return fs.createReadStream(src_filepath).pipe(unzipper.Parse())
-        .on('entry', (entry) => {
-            const filepath = `${des_path}/${entry.path}`;
-            if (!filepath.endsWith(node_path.sep)) {
-                const writeStream = fs.createWriteStream(filepath);
-                return entry.pipe(writeStream);
-            } else if (!fs.existsSync(filepath)) {
-                fs.mkdirSync(filepath, {recursive: true});
-            }
-        }).promise();
-}
