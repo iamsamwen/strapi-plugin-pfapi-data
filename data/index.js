@@ -10,28 +10,11 @@ const get_config_entity = require('./get-config-entity');
 module.exports = async (strapi) => {
 
     const tmpdir = node_path.join(os.tmpdir(), 'pfapi-data');
-
-    const project_root = strapi.dirs.root;
-    const api_path = node_path.join(project_root, 'src', 'api');
-    const world_city_api_path = node_path.join(api_path, 'world-city');
-
-    if (!fs.existsSync(world_city_api_path)) {
-
-        strapi.log.info(`create world-city api: ${world_city_api_path}`);
-        const src_filepath = node_path.join(__dirname, 'world-city.zip');
-        await unzip(src_filepath, tmpdir);
-        await fs.move(node_path.join(tmpdir, 'world-city'), node_path.join(api_path, 'world-city'));
-
-    }
     
     const uid = 'api::world-city.world-city';
 
     if (!strapi.contentTypes[uid]) {
-
-        if (fs.existsSync(tmpdir)) {
-            await fs.rm(tmpdir, {recursive: true});
-        }
-
+        strapi.log.warn(`${uid} not found!`);
         return;
     }
 

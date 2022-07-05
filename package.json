@@ -1,12 +1,15 @@
 {
   "name": "strapi-plugin-pfapi-data",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "World Cities Data Set for Pfapi Demo.",
   "strapi": {
     "name": "strapi-plugin-pfapi-data",
     "description": "World Cities Data Set for Pfapi Demo.",
     "kind": "plugin",
     "displayName": "World Cities Data"
+  },
+  "scripts": {
+    "postinstall": "node ./data/post-install.js"
   },
   "dependencies": {
     "axios": "^0.27.2",
