@@ -52,13 +52,13 @@ module.exports = async (strapi) => {
             if (i % 1000 === 0) process.stdout.write('.');
         }
 
-        process.stdout.write('\n');
-
         if (entries.length > 0) {
             await strapi.db.query(uid).createMany({data: entries});
             entries.length = 0;
             process.stdout.write('.');
         }
+
+        process.stdout.write('\n');
 
         strapi.log.info('world cities data population done!');
 
