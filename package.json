@@ -1,6 +1,6 @@
 {
   "name": "strapi-plugin-pfapi-data",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "World Cities Data Set for Pfapi Demo.",
   "strapi": {
     "name": "strapi-plugin-pfapi-data",
