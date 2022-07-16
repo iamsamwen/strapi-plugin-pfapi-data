@@ -17,7 +17,25 @@
           "lat": {
             "$gt": 60
           }
-        }
+        },
+        "filters_config": [
+          {
+            "key": "lat",
+            "type": "range",
+            "title": "Latitude"
+          },
+          {
+            "key": "lng",
+            "type": "range",
+            "title": "Latitude"
+          },
+          {
+            "key": "population"
+          },
+          {
+            "key": "country"
+          }
+        ]
       },
       "attributes": [
         {
