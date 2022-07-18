@@ -27,7 +27,7 @@
           {
             "key": "lng",
             "type": "range",
-            "title": "Latitude"
+            "title": "Longitude"
           },
           {
             "key": "population"
