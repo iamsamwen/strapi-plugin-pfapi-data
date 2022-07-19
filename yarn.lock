@@ -278,6 +278,11 @@ redis-parser@^3.0.0:
   dependencies:
     redis-errors "^1.0.0"
 
+request-ip@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/request-ip/-/request-ip-3.3.0.tgz#863451e8fec03847d44f223e30a5d63e369fa611"
+  integrity sha512-cA6Xh6e0fDBBBwH77SLJaJPBmD3nWVAcF9/XAcsrIHdjhFzFiB5aNQFytdjCGPezU3ROwrR11IddKAM08vohxA==
+
 rimraf@2:
   version "2.7.1"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.7.1.tgz#35797f13a7fdadc566142c29d4f07ccad483e3ec"
@@ -300,10 +305,10 @@ standard-as-callback@^2.1.0:
   resolved "https://registry.yarnpkg.com/standard-as-callback/-/standard-as-callback-2.1.0.tgz#8953fc05359868a77b5b9739a665c5977bb7df45"
   integrity sha512-qoRRSyROncaz1z0mvYqIE4lCd9p2R90i6GxW3uZv5ucSu8tU7B5HXUP1gG8pVZsYNVaXjk8ClXHPttLyxAL48A==
 
-strapi-pfapi@^1.8.7:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/strapi-pfapi/-/strapi-pfapi-1.9.0.tgz#c6ad1ae2a7ceab160849658f0b7f2d0339191896"
-  integrity sha512-uC4zBlmNDesCt8S6x6SWv2Sx4SYM009uCmsFxuVO/80CxQi+Ta256VPpDFnnQsnNBXS3pUTvykbSqV81HFIlUA==
+strapi-pfapi@^2.2.8:
+  version "2.2.8"
+  resolved "https://registry.yarnpkg.com/strapi-pfapi/-/strapi-pfapi-2.2.8.tgz#4c3923d00ea115758285aca49b6ea762f43d2a67"
+  integrity sha512-Glv2nECJQtVxM9tW5yCwouloTb26xw26wrIClI8BysKT+t05aA9m2/54549X9oaxw3b6Vf3fXj3wV/rDSWh6xQ==
   dependencies:
     base-x "4.0.0"
     debug "^4.3.4"
@@ -313,6 +318,7 @@ strapi-pfapi@^1.8.7:
     lodash "4.17.21"
     netmask "^2.0.2"
     parse-redis-url-simple "^1.0.2"
+    request-ip "^3.3.0"
     uuid "8.3.2"
 
 string_decoder@~1.1.1:

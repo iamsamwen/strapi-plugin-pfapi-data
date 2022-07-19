@@ -42,7 +42,7 @@
           "__component": "pfapi-types.text",
           "id": 1,
           "name": "title",
-          "value": "Northern Cities - Total <%= pagination.total %>"
+          "value": "Northern Cities<%= typeof pagination !== 'undefined' && pagination.total ? ` - Total ${pagination.total}` : '' %>"
         },
         {
           "__component": "pfapi-types.media",
@@ -79,7 +79,7 @@
           "__component": "pfapi-types.text",
           "id": 2,
           "name": "title",
-          "value": "Northern City - <%= item.name %>"
+          "value": "Northern City<%= typeof item !== 'undefined' && item.name ? ` - ${item.name}` : '' %>"
         },
         {
           "__component": "pfapi-types.media",
