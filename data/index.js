@@ -93,14 +93,14 @@ module.exports = async (strapi) => {
         await strapi.entityService.create(handle_uid, {data});
     }
 
-    if (strapi.PfapiApp && strapi.PfapiApp.pfapi_uids) {
-        await strapi.PfapiApp.pfapi_uids.load_handles();
-    }
-    
     strapi.log.info(`added ${handles.length} handles`);
 
     if (fs.existsSync(tmpdir)) {
         await fs.rm(tmpdir, {recursive: true});
+    }
+
+    if (strapi.PfapiApp && strapi.PfapiApp.pfapi_uids) {
+        await strapi.PfapiApp.pfapi_uids.load_all();
     }
 }
 
