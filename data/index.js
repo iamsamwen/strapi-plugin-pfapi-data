@@ -102,7 +102,7 @@ module.exports = async (strapi) => {
     if (strapi.PfapiApp && strapi.PfapiApp.pfapi_uids) {
         setTimeout(async() => {
             await strapi.PfapiApp.pfapi_uids.load_all();
-        }, 10000);
+        }, 30000);
     }
 }
 
